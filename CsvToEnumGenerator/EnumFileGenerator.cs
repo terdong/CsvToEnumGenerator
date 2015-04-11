@@ -39,19 +39,20 @@ namespace TeamGehem
         {
             DirectoryInfo directory_info = new DirectoryInfo("./");
 
-            FileInfo[] File_info_array = directory_info.GetFiles(string.Format("*{0}",file_extention));
-            File_info_array.OrderBy(f => f.Name);
+            FileInfo[] file_info_array = directory_info.GetFiles(string.Format("*{0}",file_extention));
+            //File_info_array.OrderBy(f => f.Name); Should not linq
+            SortFileInfo(ref file_info_array);
 
             List<string> line_list = new List<string>();
             EnumFileGenerator file_gen = EnumFileGenerator.Instance;
 
             int enum_index = 0;
-            int file_info_array_length = File_info_array.Length;
+            int file_info_array_length = file_info_array.Length;
             if (file_info_array_length == 0) { Console.WriteLine(not_found_file_message); return; }
 
-            for (int file_index = 0; file_index < File_info_array.Length; ++file_index)
+            for (int file_index = 0; file_index < file_info_array.Length; ++file_index)
             {
-                FileInfo file_info = File_info_array[file_index];
+                FileInfo file_info = file_info_array[file_index];
                 string file_name = file_info.Name.TrimEnd(file_extention.ToCharArray());
 
                 using (TextReader tr = file_info.OpenText())
@@ -107,6 +108,16 @@ namespace TeamGehem
 
             System.IO.File.WriteAllText(savePath, sb.ToString(), Encoding.Default);
             sb.Length = 0;
+        }
+
+        private void SortFileInfo(ref FileInfo[] fileEntries)
+        {
+            Array.Sort(fileEntries,
+               delegate(FileInfo x, FileInfo y)
+               {
+                   return y.Name.CompareTo(x.Name);
+               }
+             );
         }
     }
 }

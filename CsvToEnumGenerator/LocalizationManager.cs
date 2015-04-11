@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TeamGehem
 {
@@ -51,7 +49,7 @@ namespace TeamGehem
             }
             return current_messages_[index];
         }
-        
+
         private LocalizationManager()
         {
             Initialize_();
@@ -63,10 +61,11 @@ namespace TeamGehem
 
             DirectoryInfo directory_info = new DirectoryInfo(Directory_Path);
 
-            FileInfo[] File_info_array = directory_info.GetFiles(string.Format("*{0}", file_extention));
-            File_info_array.OrderBy(f => f.Name);
+            FileInfo[] file_info_array = directory_info.GetFiles(string.Format("*{0}", file_extention));
+            //File_info_array.OrderBy(f => f.Name); Should not linq
+            SortFileInfo(ref file_info_array);
 
-            int file_info_array_length = File_info_array.Length;
+            int file_info_array_length = file_info_array.Length;
 
             messages_dic_.Clear();
             current_messages_ = null;
@@ -75,7 +74,7 @@ namespace TeamGehem
 
             for (int file_index = 0; file_index < file_info_array_length; ++file_index)
             {
-                FileInfo file_info = File_info_array[file_index];
+                FileInfo file_info = file_info_array[file_index];
                 string file_name = file_info.Name.TrimEnd(file_extention.ToCharArray());
 
                 if (file_name.Equals(key_file_name)) { continue; }
@@ -116,13 +115,23 @@ namespace TeamGehem
 
             line_list = null;
             directory_info = null;
-            File_info_array = null;
+            file_info_array = null;
 
-            if(file_info_array_length > 0)
+            if (file_info_array_length > 0)
             {
                 int key_index = 0;
                 SetLocale_(ref key_index);
             }
+        }
+
+        private void SortFileInfo(ref FileInfo[] fileEntries)
+        {
+            Array.Sort(fileEntries,
+               delegate(FileInfo x, FileInfo y)
+               {
+                   return y.Name.CompareTo(x.Name);
+               }
+             );
         }
     }
 }
