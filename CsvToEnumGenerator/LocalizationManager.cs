@@ -7,7 +7,7 @@ namespace TeamGehem
 {
     public class LocalizationManager
     {
-        private static readonly string file_extention = ".csv";
+        private static readonly string file_extention = "Local_*.csv";
         private static readonly string error_message = "not found message";
         private static readonly string key_file_name = "Local_Lang";
         private static LocalizationManager Instance_ = new LocalizationManager();

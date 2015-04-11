@@ -13,7 +13,7 @@ namespace TeamGehem
         private static readonly string file_content_format = "{0} = {1},\n";
         private static readonly string file_content_format_end = "}}";
         private static readonly string file_name_format = "./{0}.cs";
-        private static readonly string file_extention = ".csv";
+        private static readonly string file_extention = "Local_*.csv";
 
         private static readonly string key_file_name = "Local_Lang";
 
