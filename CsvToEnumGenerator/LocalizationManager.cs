@@ -18,7 +18,7 @@ namespace TeamGehem
         private IList<string> current_messages_;
         private int current_messages_count_;
 
-        public string Directory_Path { set { directory_path_ = value; } get { return directory_path_; } }
+        public string Directory_Path { set { directory_path_ = value; Instance_.Initialize_(); } get { return directory_path_; } }
         private string directory_path_ = "./";
 
         public static void SetLocale(int local_index)
@@ -28,10 +28,6 @@ namespace TeamGehem
         public static string GetMessage(int index)
         {
             return Instance_.GetMessage_(ref index);
-        }
-        public static void Initialize()
-        {
-            Instance_.Initialize_();
         }
 
         private void SetLocale_(ref int local_index)
