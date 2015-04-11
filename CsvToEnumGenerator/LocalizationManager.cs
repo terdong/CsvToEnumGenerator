@@ -1,0 +1,132 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TeamGehem
+{
+    public class LocalizationManager
+    {
+        private static readonly string file_extention = ".csv";
+        private static readonly string error_message = "not found message";
+        private static readonly string key_file_name = "Local_Key";
+        private static LocalizationManager Instance_ = new LocalizationManager();
+
+        private Dictionary<int, IList<string>> messages_dic_ = new Dictionary<int, IList<string>>();
+        private IList<string> current_messages_;
+        private int current_messages_count_;
+
+        public string Directory_Path { set { directory_path_ = value; } get { return directory_path_; } }
+        private string directory_path_ = "./";
+
+        public static void SetLocale(int local_index)
+        {
+            Instance_.SetLocale_(ref local_index);
+        }
+        public static string GetMessage(int index)
+        {
+            return Instance_.GetMessage_(ref index);
+        }
+        public static void Initialize()
+        {
+            Instance_.Initialize_();
+        }
+
+        private void SetLocale_(ref int local_index)
+        {
+            if (messages_dic_.ContainsKey(local_index))
+            {
+                current_messages_ = messages_dic_[local_index];
+                current_messages_count_ = current_messages_.Count;
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        private string GetMessage_(ref int index)
+        {
+            if (index >= current_messages_count_)
+            {
+                return error_message;
+            }
+            return current_messages_[index];
+        }
+        
+        private LocalizationManager()
+        {
+            Initialize_();
+        }
+
+        private void Initialize_()
+        {
+            List<string> line_list = new List<string>();
+
+            DirectoryInfo directory_info = new DirectoryInfo(Directory_Path);
+
+            FileInfo[] File_info_array = directory_info.GetFiles(string.Format("*{0}", file_extention));
+            File_info_array.OrderBy(f => f.Name);
+
+            int file_info_array_length = File_info_array.Length;
+
+            messages_dic_.Clear();
+            current_messages_ = null;
+
+            bool is_not_init_dic = true;
+
+            for (int file_index = 0; file_index < file_info_array_length; ++file_index)
+            {
+                FileInfo file_info = File_info_array[file_index];
+                string file_name = file_info.Name.TrimEnd(file_extention.ToCharArray());
+
+                if (file_name.Equals(key_file_name)) { continue; }
+
+                using (TextReader tr = file_info.OpenText())
+                {
+                    string line;
+                    while (!string.IsNullOrEmpty(line = tr.ReadLine()))
+                    {
+                        line_list.Add(line);
+                    }
+                }
+
+                string[] key_parts = line_list[0].Split(',');
+                int key_parts_length = key_parts.Length;
+                int part_length = line_list.Count;
+
+                if (is_not_init_dic)
+                {
+                    for (int i = 0; i < key_parts_length; ++i)
+                    {
+                        messages_dic_[i] = new List<string>();
+                    }
+                    is_not_init_dic = false;
+                }
+
+                for (int i = 0; i < part_length; ++i)
+                {
+                    var parts = line_list[i].Split(',');
+                    for (int j = 1; j < key_parts_length; ++j)
+                    {
+                        IList<string> list = messages_dic_[j - 1];
+                        list.Add(parts[j]);
+                    }
+                }
+                line_list.Clear();
+            }
+
+            line_list = null;
+            directory_info = null;
+            File_info_array = null;
+
+            if(file_info_array_length > 0)
+            {
+                int key_index = 0;
+                SetLocale_(ref key_index);
+            }
+        }
+    }
+}
