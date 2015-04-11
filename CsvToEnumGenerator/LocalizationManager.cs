@@ -9,7 +9,7 @@ namespace TeamGehem
     {
         private static readonly string file_extention = ".csv";
         private static readonly string error_message = "not found message";
-        private static readonly string key_file_name = "Local_Key";
+        private static readonly string key_file_name = "Local_Lang";
         private static LocalizationManager Instance_ = new LocalizationManager();
 
         private Dictionary<int, IList<string>> messages_dic_ = new Dictionary<int, IList<string>>();

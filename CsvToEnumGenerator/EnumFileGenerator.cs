@@ -15,7 +15,7 @@ namespace TeamGehem
         private static readonly string file_name_format = "./{0}.cs";
         private static readonly string file_extention = ".csv";
 
-        private static readonly string key_file_name = "Local_Key";
+        private static readonly string key_file_name = "Local_Lang";
 
         private static readonly string complete_message_format = "{0}. Create {1}";
         private static readonly string not_found_file_message = "not found files.";
