@@ -18,6 +18,7 @@ namespace TeamGehem
         private static readonly string key_file_name = "Local_Key";
 
         private static readonly string complete_message_format = "{0}. Create {1}";
+        private static readonly string not_found_file_message = "not found files.";
 
         private static readonly EnumFileGenerator instance_ = new EnumFileGenerator();
         public static EnumFileGenerator Instance { get { return instance_; } }
@@ -45,6 +46,8 @@ namespace TeamGehem
             EnumFileGenerator file_gen = EnumFileGenerator.Instance;
 
             int enum_index = 0;
+            int file_info_array_length = File_info_array.Length;
+            if (file_info_array_length == 0) { Console.WriteLine(not_found_file_message); return; }
 
             for (int file_index = 0; file_index < File_info_array.Length; ++file_index)
             {

@@ -15,6 +15,8 @@ namespace TeamGehem
 
             //LocalizationManager.SetLocalizationMessages(1);
             //Console.WriteLine(LocalizationManager.GetMessage(0));
+
+            //Console.ReadLine();
         }
     }
 }
