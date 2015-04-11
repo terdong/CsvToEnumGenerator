@@ -9,7 +9,7 @@ namespace TeamGehem
 {
     public class EnumFileGenerator
     {
-        private static readonly string file_content_format_first = "using System;namespace CsvToEnumGenerator{{\npublic enum {0}{{\n";
+        private static readonly string file_content_format_first = "using System;namespace TeamGehem{{\npublic enum {0}{{\n";
         private static readonly string file_content_format = "{0} = {1},\n";
         private static readonly string file_content_format_end = "}}";
         private static readonly string file_name_format = "./{0}.cs";
