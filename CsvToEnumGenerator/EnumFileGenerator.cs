@@ -9,11 +9,12 @@ namespace TeamGehem
 {
     public class EnumFileGenerator
     {
-        private static readonly string file_content_format_first = "using System;namespace TeamGehem{{\npublic enum {0}{{\n";
-        private static readonly string file_content_format = "{0} = {1},\n";
+        private static readonly string file_content_format_first = "using System;\nnamespace TeamGehem{{\npublic enum E{0}{{\n";
+        private static readonly string file_content_format_type1 = "{0} = {1},\n";
+        private static readonly string file_content_format_type2 = "{0} = {1}, //{2}\n";
         private static readonly string file_content_format_end = "}}";
-        private static readonly string file_name_format = "./{0}.cs";
-        private static readonly string file_extention = "Local_*.csv";
+        private static readonly string file_name_format = "./E{0}.cs";
+        private static readonly string file_extention = "Local*.csv";
 
         private static readonly string key_file_name = "Local_Lang";
 
@@ -65,6 +66,7 @@ namespace TeamGehem
                 }
                 int list_count = line_list.Count;
                 string[] key_name = null;
+                string[] value_name = null;
                 if (file_name.Equals(key_file_name))
                 {
                     var parts = line_list[0].Split(',');
@@ -73,17 +75,19 @@ namespace TeamGehem
                     {
                         key_name[j - 1] = parts[j];
                     }
-                    file_gen.CreateEnumFile(file_name, key_name, 0);
+                    file_gen.CreateEnumFile(file_name, key_name, value_name, 0);
                 }
                 else
                 {
                     key_name = new string[list_count];
+                    value_name = new string[list_count];
                     for (int i = 0; i < list_count; ++i)
                     {
                         var parts = line_list[i].Split(',');
                         key_name[i] = parts[0];
-                    }
-                    file_gen.CreateEnumFile(file_name, key_name, enum_index * key_name.Length);
+                        value_name[i] = parts[1];
+                     }
+                    file_gen.CreateEnumFile(file_name, key_name, value_name, enum_index * key_name.Length);
                     ++enum_index;
                 }
 
@@ -93,13 +97,23 @@ namespace TeamGehem
             }
         }
 
-        private void CreateEnumFile(string file_name, string [] contents, int fiducial_value)
+        private void CreateEnumFile(string file_name, string [] contents, string [] value_name, int fiducial_value)
         {
             sb.AppendFormat(file_content_format_first, file_name);
 
-            for (int i = 0; i < contents.Length; ++i)
+            if(value_name == null)
             {
-                sb.AppendFormat(file_content_format, contents[i], i + fiducial_value);
+                for (int i = 0; i < contents.Length; ++i)
+                {
+                    sb.AppendFormat(file_content_format_type1, contents[i], i + fiducial_value);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < contents.Length; ++i)
+                {
+                    sb.AppendFormat(file_content_format_type2, contents[i], i + fiducial_value, value_name[i]);
+                }
             }
 
             sb.Append(file_content_format_end);

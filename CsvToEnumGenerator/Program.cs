@@ -11,7 +11,7 @@ namespace TeamGehem
     {
         static void Main(string[] args)
         {
-            //EnumFileGenerator.GenerateAllEnumFile();
+            EnumFileGenerator.GenerateAllEnumFile();
 
             //LocalizationManager.SetLocalizationMessages(1);
             //Console.WriteLine(LocalizationManager.GetMessage(0));
